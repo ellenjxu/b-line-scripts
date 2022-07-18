@@ -1,6 +1,6 @@
 import pandas as pd
 from matplotlib import pyplot as plt
-from sklearn.metrics import average_precision_score, precision_recall_curve, PrecisionRecallDisplay, precision_score, recall_score
+from sklearn.metrics import auc, average_precision_score, precision_recall_curve, PrecisionRecallDisplay, precision_score, recall_score
 
 # load the data
 df = pd.read_csv('C:/Users/ellen/Documents/code/B-line_detection/scripts/results/all_labels.csv')
@@ -77,29 +77,48 @@ for classes in classification:
 
     # --------------------- PR curves ---------------------
 
-    ap_crowd = average_precision_score(y_labels, y_hat_crowd_probs)
-    # ap_expert = average_precision_score(y_labels, y_hat_expert_probs)
-
     # test
-
     # print(test_threshold(0.5, y_labels, y_hat_crowd_probs, y_hat_expert_probs))
 
     # precision and recall curve
 
     precision, recall, _ = precision_recall_curve(y_labels, y_hat_crowd_probs)
+
+    # 1. AP
+    # ap_crowd = average_precision_score(y_labels, y_hat_crowd_probs)
+    # ap_expert = average_precision_score(y_labels, y_hat_expert_probs)
+
+    # 2. AUC
+    auc_crowd = auc(recall, precision)
+
     disp = PrecisionRecallDisplay(precision=precision, recall=recall)
-    disp.plot(ax=plt.gca(), name=f"crowd (AP: {ap_crowd:.2f})")
+    disp.plot(ax=plt.gca(), name=f"crowd (AUC: {auc_crowd:.2f})")
     # precision2, recall2, _ = precision_recall_curve(y_labels, y_hat_expert_probs)
     # disp = PrecisionRecallDisplay(precision=precision2, recall=recall2)
     # disp.plot(ax=plt.gca(), name=f"expert (AP: {ap_expert:.2f})")
 
     # get precision and recall for each expert
+
+    legend = [f"crowd (AUC: {auc_crowd:.2f})"]
+
     for i in range(6):
-        precision, recall, _ = precision_recall_curve(y_labels, y_hat_expert_probs[i])
-        disp = PrecisionRecallDisplay(precision=precision, recall=recall)
-        disp.plot(ax=plt.gca(), name=f"expert {i+1} (AP: {average_precision_score(y_labels, y_hat_expert_probs[i]):.2f})")
+        
+        # 1. plot points for each expert
+        y = precision_score(y_labels, y_hat_expert_probs[i])
+        x = recall_score(y_labels, y_hat_expert_probs[i])
+
+        plt.scatter(x, y)
+        # plt.annotate(f"expert {i+1}", (x, y))
+        legend.append(f"expert {i+1}")
+        plt.legend(legend)
+
+        # 2. plot curve for each expert
+        # precision, recall, _ = precision_recall_curve(y_labels, y_hat_expert_probs[i])
+        # disp = PrecisionRecallDisplay(precision=precision, recall=recall)
+        # disp.plot(ax=plt.gca(), name=f"expert {i+1} (AP: {average_precision_score(y_labels, y_hat_expert_probs[i]):.2f})")
 
     plt.title(f'Precision-Recall curve for {classes}')
+    plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/precision_recall_{classes}.png')
     plt.show()
 
 # df.to_csv('C:/Users/ellen/Documents/code/B-line_detection/scripts/results/precision_recall_out.csv', index=False)

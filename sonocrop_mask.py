@@ -49,22 +49,21 @@ def get_mask(input_file):
 
     masked = mask(input_file, 0, thresh=thresh, save_mask=False)
 
-    # if save_mask:
-    #   output_file = input_file.replace('.mp4', '_mask.png')
-    #   plt.imsave(output_file, masked, cmap='gray')
-
-    #   return output_file
-
-    return masked
 
     # optionally, save output file
+    # output_file = input_file.replace('.mp4', '_mask.png')
+    # plt.imsave(output_file, masked, cmap='gray')
+
+    # return output_file
+
+    return masked
 
 # test cases
 
 # C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-122/BEDLUS_122_011.mp4
 # C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-103/BEDLUS_103_001.mp4
 # C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-052/test.mp4
-input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-013/BEDLUS_013_011.mp4"
+# input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-013/BEDLUS_013_011.mp4"
 
 
 # plt.imshow(get_mask(input_file), cmap='gray')

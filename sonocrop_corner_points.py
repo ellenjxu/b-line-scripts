@@ -68,12 +68,12 @@ def get_corners_canny(file):
     img = cv.imread(file)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     
-    edges = cv.Canny(gray, 1000, 1200, apertureSize=3) # 50 150
+    edges = cv.Canny(gray, 50, 100, apertureSize=3) # 50 150 # 1000 1200
     cv.imshow('Canny Edge Detection', edges)
     cv.waitKey(0)
     
     lines_list = []
-    lines = cv.HoughLinesP(edges, 1, np.pi/180, threshold=100, minLineLength=150, maxLineGap=200)
+    lines = cv.HoughLinesP(edges, 1, np.pi/180, threshold=100, minLineLength=400, maxLineGap=250)
     
     for points in lines:
         x1,y1,x2,y2=points[0]
@@ -117,7 +117,7 @@ def get_corners_canny(file):
 
     # Draw on original image
     for points in corner_points:
-        img2 = cv.circle(img,points,radius=3, color=(0, 0, 255), thickness=-1)
+        img2 = cv.circle(img,points,radius=10, color=(0, 0, 255), thickness=-1)
 
     # Show the result img
     cv.imshow('Corner points',img2)
@@ -125,8 +125,12 @@ def get_corners_canny(file):
 
 # ------------------------------ run ------------------------------
 
-# input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-122/BEDLUS_122_011.mp4"
-# # get_corners_simple(get_mask(input_file))
+# input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-001/BEDLUS_001_008.mp4"
+# get_mask(input_file)
+# get_corners_canny(get_mask(input_file))
+
+input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-001/BEDLUS_001_008_mask.png"
+get_corners_canny(input_file)
 
 # # plot on the image
 # # plt.imshow(arr, cmap='gray')

@@ -131,8 +131,8 @@ def main():
                     iou = evaluate(input_file, corner_points, corner_points_auto, is_iou=True)
                     
                     # write to text file
-                    with open("C:/Users/ellen/Documents/code/B-line_detection/supplementary_files/iou_results.txt", "a") as f:
-                        f.write(input_file + " " + str(iou) + "\n")
+                    with open("C:/Users/ellen/Documents/code/B-line_detection/scripts/results/iou_results.txt", "a") as f:
+                        f.write(input_file + " " + str(iou) + "/n")
                     
                     print(input_file + " " + str(iou))
                     break

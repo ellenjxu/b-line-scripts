@@ -17,6 +17,10 @@ df_pseudo = pd.read_excel('C:/Users/ellen/Documents/code/B-line_detection/BEDLUS
 # get rid of duplicate cases and clips
 df_pseudo = df_pseudo.drop_duplicates(subset=['Case', 'Clip'])
 
+xls = pd.ExcelFile('C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/trained_networks/results/0201_pseudo-labels_/results_0.9200_max_test/individual_clip_results.xlsx')
+df2_pseudo = pd.read_excel(xls, 'clip_results')
+df2_pseudo = df2_pseudo.drop_duplicates(subset=['case', 'clip'])
+
 # get labels for each group
 y_labels = df['gs_label_train'].values.tolist()
 y_hat_crowd = df['chosen_answer'].values.tolist()
@@ -58,16 +62,23 @@ for i in range(len(y_hat_expert)):
 
 # --------------------- Predictions for AI ---------------------
 
-y_hat_ai_probs = [] # df_pseudo['pred'].values.tolist()
-
+# 1. single clip predictions
 # get first value of first prediction in each row
-for i in range(len(df_pseudo)):
-    # turn to list
-    pred_list = ast.literal_eval(df_pseudo.iloc[i]['pred'])
-    pred = pred_list[0][1]
-    y_hat_ai_probs.append(pred)
 
-y_ai_labels = df_pseudo['label'].values.tolist()
+# y_hat_ai_probs = []
+
+# for i in range(len(df_pseudo)):
+#     # turn to list
+#     pred_list = ast.literal_eval(df_pseudo.iloc[i]['pred'])
+#     pred = pred_list[0][1]
+#     y_hat_ai_probs.append(pred)
+
+# y_ai_labels = df_pseudo['label'].values.tolist()
+
+# 2. aggregate clip predictions
+
+y_hat_ai_probs = df2_pseudo['agg_prediction'].values.tolist()
+y_ai_labels = df2_pseudo['label'].values.tolist()
 
 # --------------------- PR curves ---------------------
 
@@ -111,8 +122,8 @@ for i in range(6):
     # disp = PrecisionRecallDisplay(precision=precision, recall=recall)
     # disp.plot(ax=plt.gca(), name=f"expert {i+1} (AP: {average_precision_score(y_labels, y_hat_expert_probs[i]):.2f})")
 
-print(y_ai_labels)
-print(y_hat_ai_probs)
+# print(y_ai_labels)
+# print(y_hat_ai_probs)
 
 precision2, recall2, _ = precision_recall_curve(y_ai_labels, y_hat_ai_probs)
 auc_ai = auc(recall2, precision2)

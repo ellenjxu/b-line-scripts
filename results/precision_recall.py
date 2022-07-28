@@ -1,3 +1,7 @@
+"""
+Generate precision recall curves for crowd and expert.
+"""
+
 import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.metrics import auc, average_precision_score, precision_recall_curve, PrecisionRecallDisplay, precision_score, recall_score

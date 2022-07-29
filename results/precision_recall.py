@@ -66,10 +66,15 @@ for classes in classification:
     # 2. get curve for each expert
 
     y_hat_expert_probs = [[], [], [], [], [], []]
+    y_hat_expert_avg = []
 
     for i in range(len(y_hat_expert)):
         list = y_hat_expert[i].split(',')
         list = [1 if list[j] == f" '{classes}'" or list[j] == f"['{classes}'" or list[j] == f" '{classes}']" else 0 for j in range(len(list))]
+        
+        # get average probability
+        avg = sum(list) / len(list)
+        y_hat_expert_avg.append(avg)
         
         for j in range(6): # append to each individual expert's list
             y_hat_expert_probs[j].append(list[j])
@@ -120,6 +125,12 @@ for classes in classification:
         # precision, recall, _ = precision_recall_curve(y_labels, y_hat_expert_probs[i])
         # disp = PrecisionRecallDisplay(precision=precision, recall=recall)
         # disp.plot(ax=plt.gca(), name=f"expert {i+1} (AP: {average_precision_score(y_labels, y_hat_expert_probs[i]):.2f})")
+
+    # plot expert average as cross
+    y = precision_score(y_labels, y_hat_expert_avg)
+    x = recall_score(y_labels, y_hat_expert_avg)
+    
+    plt.plot(x, y, '+')
 
     plt.title(f'Precision-Recall curve for {classes}')
     plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/precision_recall_{classes}.png')

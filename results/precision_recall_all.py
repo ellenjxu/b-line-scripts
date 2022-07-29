@@ -87,6 +87,9 @@ y_ai_labels = df2_pseudo['label'].values.tolist()
 
 # precision and recall curve
 
+# print(y_labels)
+# print(y_hat_crowd_probs)
+
 precision, recall, _ = precision_recall_curve(y_labels, y_hat_crowd_probs)
 
 # 1. AP
@@ -106,6 +109,9 @@ disp.plot(ax=plt.gca(), name=f"crowd (AUC: {auc_crowd:.2f})")
 
 legend = [f"crowd (AUC: {auc_crowd:.2f})"]
 
+expert_prec = []
+expert_recall = []
+
 for i in range(6):
     
     # 1. plot points for each expert
@@ -116,6 +122,9 @@ for i in range(6):
     # plt.annotate(f"expert {i+1}", (x, y))
     legend.append(f"expert {i+1}")
     plt.legend(legend)
+    
+    expert_prec.append(y)
+    expert_recall.append(x)
 
     # 2. plot curve for each expert
     # precision, recall, _ = precision_recall_curve(y_labels, y_hat_expert_probs[i])
@@ -128,12 +137,16 @@ for i in range(6):
 precision2, recall2, _ = precision_recall_curve(y_ai_labels, y_hat_ai_probs)
 auc_ai = auc(recall2, precision2)
 
-disp = PrecisionRecallDisplay(precision=precision2, recall=recall2)
-disp.plot(ax=plt.gca(), name=f"ai (AUC: {auc_ai:.2f})")
+# disp = PrecisionRecallDisplay(precision=precision2, recall=recall2)
+# disp.plot(ax=plt.gca(), name=f"ai (AUC: {auc_ai:.2f})")
+
+# plot average of experts
+plt.plot(sum(expert_prec)/6, sum(expert_recall)/6, '+', mew=2, ms=7, color="black")
+legend.append(f"average of experts")
 
 plt.title(f'Precision-Recall curve for detecting presence of B-lines')
-plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/all/precision_recall_all.png')
+plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/precision_recall_2.png')
 plt.show()
 
-df.to_csv('C:/Users/ellen/Documents/code/B-line_detection/scripts/results/all/precision_recall_out.csv', index=False)
+# df.to_csv('C:/Users/ellen/Documents/code/B-line_detection/scripts/results/all/precision_recall_out.csv', index=False)
 # print(df["expert_score_no b-lines"].value_counts())

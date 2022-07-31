@@ -27,7 +27,7 @@ from utils.training_utils import get_prediction
 
 # define model evaluation details
 model_subfolder = ''
-model_name = '0201_pseudo-labels_'
+model_name = '0201_crowd-model_'
 dataset_split = 'test' # val
 extension = ''
 

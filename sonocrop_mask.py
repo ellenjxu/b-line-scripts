@@ -65,7 +65,6 @@ def get_mask(input_file):
 # C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-052/test.mp4
 # input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-013/BEDLUS_013_011.mp4"
 
-
 # plt.imshow(get_mask(input_file), cmap='gray')
 # plt.show()
 

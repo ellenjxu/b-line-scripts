@@ -14,7 +14,7 @@ from sonocrop.vid import get_edges
 
 # get corner points
 
-def get_corner_points(input_file, display=False):
+def get_corner_points(input_file, display=False, is_canny=False):
 
     """
     Get corner points from .pkl (red) and sonocrop (blue).
@@ -27,6 +27,10 @@ def get_corner_points(input_file, display=False):
     mask = get_mask(input_file)
     top, bottom, left, right = get_edges(input_file, thresh=0.05)   # 0.05
     mask = mask[top:bottom, left:right]
+
+    # optionally, save output file
+    output_file = input_file.replace('.mp4', '_mask_cropped.png')
+    plt.imsave(output_file, mask, cmap='gray')
 
     corner_points_auto = get_corners_simple(mask)
     corner_points_auto = [list(x) for x in corner_points_auto]  # turn tuple into list
@@ -81,6 +85,9 @@ def evaluate(input_file, corner_points, corner_points_auto, is_iou=True):
     pts_auto = np.array(corner_points_auto, np.int32)
     pts_auto = pts_auto.reshape((-1,1,2))
 
+    # image = "C:/Users/ellen/Documents/code/B-line_detection/intermediate/data/images/example/BEDLUS_001_008_mask_cropped.png"
+    # img = np.asarray(cv.imread(image))
+
     # cv.polylines(img, [pts], True, (255, 0, 0), 2)
     # cv.polylines(img, [pts_auto], True, (0, 0, 255), 2)
     # cv.imshow('Bounding trapezoids', img)
@@ -97,6 +104,7 @@ def evaluate(input_file, corner_points, corner_points_auto, is_iou=True):
 
     if is_iou:
         iou = iou(corner_points, corner_points_auto)
+        # print(iou)
         return iou
 
     # euclidean distance
@@ -144,10 +152,11 @@ def main():
             else:
                 continue
 
-# main()
+main()
 
-# test
-# file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-111/BEDLUS_111_001.mp4"
-file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-122/BEDLUS_122_011.mp4"
-corner, corner_auto = get_corner_points(file, display=True)
-# evaluate(file, corner, corner_auto, is_iou=True)
+# # test
+# # file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-111/BEDLUS_111_001.mp4"
+# file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-001/BEDLUS_001_008.mp4"
+# corner, corner_auto = get_corner_points(file, display=True)
+# iou = evaluate(file, corner, corner_auto, is_iou=True)
+# # evaluate(file, corner, corner_auto, is_iou=True)

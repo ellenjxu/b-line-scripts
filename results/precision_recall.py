@@ -130,7 +130,7 @@ for classes in classification:
     y = precision_score(y_labels, y_hat_expert_avg)
     x = recall_score(y_labels, y_hat_expert_avg)
     
-    plt.plot(x, y, '+')
+    plt.plot(x, y, '+', color='red')
 
     plt.title(f'Precision-Recall curve for {classes}')
     plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/precision_recall_{classes}.png')

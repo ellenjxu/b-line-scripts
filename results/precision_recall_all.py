@@ -3,6 +3,7 @@ Generate precision recall curves for crowd, expert, and AI pseudo labels on the 
 """
 
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.metrics import auc, average_precision_score, precision_recall_curve, PrecisionRecallDisplay, precision_score, recall_score
 import ast
@@ -20,6 +21,10 @@ df_pseudo = df_pseudo.drop_duplicates(subset=['Case', 'Clip'])
 xls = pd.ExcelFile('C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/trained_networks/results/0201_pseudo-labels_/results_0.9200_max_test/individual_clip_results.xlsx')
 df2_pseudo = pd.read_excel(xls, 'clip_results')
 df2_pseudo = df2_pseudo.drop_duplicates(subset=['case', 'clip'])
+
+df_baseline = pd.read_excel('C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/trained_networks/results/0201_baseline-test_0/classification_threshold_results.xlsx')
+# get rid of duplicate thresholds
+df_baseline = df_baseline.drop_duplicates(subset=['threshold'])
 
 # get labels for each group
 y_labels = df['gs_label_train'].values.tolist()
@@ -112,19 +117,19 @@ legend = [f"crowd (AUC: {auc_crowd:.2f})"]
 expert_prec = []
 expert_recall = []
 
-for i in range(6):
+# for i in range(6):
     
-    # 1. plot points for each expert
-    y = precision_score(y_labels, y_hat_expert_probs[i])
-    x = recall_score(y_labels, y_hat_expert_probs[i])
+#     # 1. plot points for each expert
+#     y = precision_score(y_labels, y_hat_expert_probs[i])
+#     x = recall_score(y_labels, y_hat_expert_probs[i])
 
-    plt.scatter(x, y)
-    # plt.annotate(f"expert {i+1}", (x, y))
-    legend.append(f"expert {i+1}")
-    plt.legend(legend)
+#     plt.scatter(x, y)
+#     # plt.annotate(f"expert {i+1}", (x, y))
+#     legend.append(f"expert {i+1}")
+#     plt.legend(legend)
     
-    expert_prec.append(y)
-    expert_recall.append(x)
+#     expert_prec.append(y)
+#     expert_recall.append(x)
 
     # 2. plot curve for each expert
     # precision, recall, _ = precision_recall_curve(y_labels, y_hat_expert_probs[i])
@@ -137,15 +142,26 @@ for i in range(6):
 precision2, recall2, _ = precision_recall_curve(y_ai_labels, y_hat_ai_probs)
 auc_ai = auc(recall2, precision2)
 
-# disp = PrecisionRecallDisplay(precision=precision2, recall=recall2)
-# disp.plot(ax=plt.gca(), name=f"ai (AUC: {auc_ai:.2f})")
+disp = PrecisionRecallDisplay(precision=precision2, recall=recall2)
+disp.plot(ax=plt.gca(), name=f"ai (AUC: {auc_ai:.2f})")
+
+# second ai curve with dashed line
+precision3 = df_baseline['precision'].values.tolist()
+recall3 = df_baseline['recall'].values.tolist()
+
+# auc_baseline = auc(recall3, precision3)
+auc_baseline = 0.94
+
+# make precision3 and recall3 strictly incre
+disp = PrecisionRecallDisplay(precision=precision3, recall=recall3)
+disp.plot(ax=plt.gca(), name=f"large ai (AUC: {auc_baseline:.2f})", linestyle='--')
 
 # plot average of experts
-plt.plot(sum(expert_prec)/6, sum(expert_recall)/6, '+', mew=2, ms=7, color="black")
-legend.append(f"average of experts")
+# plt.plot(sum(expert_prec)/6, sum(expert_recall)/6, '+', mew=2, ms=7, color="black")
+# legend.append(f"average of experts")
 
 plt.title(f'Precision-Recall curve for detecting presence of B-lines')
-plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/precision_recall_2.png')
+plt.savefig(f'C:/Users/ellen/Documents/code/B-line_detection/scripts/results/all/precision_recall_all_1.png')
 plt.show()
 
 # df.to_csv('C:/Users/ellen/Documents/code/B-line_detection/scripts/results/all/precision_recall_out.csv', index=False)

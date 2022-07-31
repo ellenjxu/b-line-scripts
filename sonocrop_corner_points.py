@@ -85,13 +85,13 @@ def get_corners_canny(file):
     cv.waitKey(0)
 
     # Display all points
-    for lines in lines_list:
-        point1 = lines[0]
-        point2 = lines[1]
-        plt.plot(point1[0],point1[1],'ro')
-        plt.plot(point2[0],point2[1],'ro')
+    # for lines in lines_list:
+    #     point1 = lines[0]
+    #     point2 = lines[1]
+    #     plt.plot(point1[0],point1[1],'ro')
+    #     plt.plot(point2[0],point2[1],'ro')
 
-    plt.show()
+    # plt.show()
 
     # Get two highest and two lowest y values for corners
     y_values = []
@@ -113,15 +113,15 @@ def get_corners_canny(file):
         # print(index1, index2)
         corner_points.append(lines_list[index1][index2])
 
-    print(corner_points)
+    # print(corner_points)
 
     # Draw on original image
     for points in corner_points:
         img2 = cv.circle(img,points,radius=10, color=(0, 0, 255), thickness=-1)
 
     # Show the result img
-    cv.imshow('Corner points',img2)
-    cv.waitKey(0)
+    # cv.imshow('Corner points',img2)
+    # cv.waitKey(0)
 
 # ------------------------------ run ------------------------------
 
@@ -129,8 +129,8 @@ def get_corners_canny(file):
 # get_mask(input_file)
 # get_corners_canny(get_mask(input_file))
 
-input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-001/BEDLUS_001_008_mask.png"
-get_corners_canny(input_file)
+# input_file = "C:/Users/ellen/Documents/code/B-line_detection/BEDLUS-Data/LUS_videos/Case-001/BEDLUS_001_008_mask.png"
+# get_corners_canny(input_file)
 
 # # plot on the image
 # # plt.imshow(arr, cmap='gray')
